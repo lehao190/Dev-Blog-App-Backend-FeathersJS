@@ -1,0 +1,62 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "96ivGZ+eoCJ9NZCrbzYI1a4cdME=",
+    "authStrategies": [
+      "jwt",
+      "local",
+      "anonymous",
+      "apiKey"
+    ],
+    "apiKey": {
+      "allowedKeys": [ "Dante", "Vergil" ],
+      "header": "Randon-Access-Token-Yeah",
+      "urlParam": "tokenFromMe"
+    },
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    },
+    "oauth": {
+      "redirect": "/",
+      "google": {
+        "key": "<google oauth key>",
+        "secret": "<google oauth secret>",
+        "scope": [
+          "email",
+          "profile",
+          "openid"
+        ]
+      },
+      "facebook": {
+        "key": "<facebook oauth key>",
+        "secret": "<facebook oauth secret>"
+      },
+      "github": {
+        "key": "<github oauth key>",
+        "secret": "<github oauth secret>"
+      }
+    }
+  },
+  "mysql": {
+    "client": "mysql2",
+    "connection": "mysql://root:@localhost:3306/dev_blog"
+  }
+}
