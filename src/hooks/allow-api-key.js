@@ -22,7 +22,7 @@ module.exports = (options = {}) => {
       }
     }
 
-    // console.log('allow-key-api params : ', context)
+    // console.log('allow-key-api params : ')
 
     return context
   }

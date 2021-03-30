@@ -5,14 +5,92 @@ const {
 } = require('@feathersjs/authentication')
 const { LocalStrategy } = require('@feathersjs/authentication-local')
 const { expressOauth } = require('@feathersjs/authentication-oauth')
+const { NotAuthenticated } = require('@feathersjs/errors')
+
+class MyJwtStrategy extends JWTStrategy {
+  async authenticate (data, params) {
+    const jwtAuthenticate = await super.authenticate(data, params)
+    
+    return jwtAuthenticate
+
+    // const { accessToken } = data
+    // const { entity } = this.configuration
+
+    // if (!accessToken) {
+    //   throw new NotAuthenticated('No access token');
+    // }
+
+    // this.authentication.verifyAccessToken(accessToken)
+  }
+}
+
+class MyLocalStrategy extends LocalStrategy {
+  async getEntity (entity, params) {
+    const userEntity = await super.getEntity(entity, params)
+
+    return userEntity
+  }
+}
 
 class MyAuthService extends AuthenticationService {
   async create (data, params) {
-    const a = await super.create(data, params)
-    // const b = await super.authenticate(data, params, ...this.configuration.authStrategies)
-    // const c = await super.getTokenOptions(a, params)
+    const { entity } = this.configuration
 
-    return a
+    const authStrategies =
+      params.authStrategies || this.configuration.authStrategies
+
+    if (!authStrategies.length) {
+      throw new NotAuthenticated(
+        'No Authentication Strategies allowed to create JWT'
+      )
+    }
+
+    let refreshTokenPayload
+    let authResult
+
+    const auth = await this.authenticate(
+      data,
+      params,
+      ...this.configuration.authStrategies
+    )
+
+    if (data.action === 'refresh' && !data.refresh_token) {
+      throw new NotAuthenticated('No refresh token')
+    } else if (data.action === 'refresh') {
+      authResult = {
+        [entity]: auth.user,
+        authentication: { strategy: data.strategy }
+      }
+
+      // console.log('auth: ', authResult)
+    }
+
+    const payload = await this.getPayload(authResult, params)
+    
+    const jwtOptions = await this.getTokenOptions(authResult, params)
+
+    const accessToken = await this.createAccessToken(payload, jwtOptions)
+
+    const refreshTokenJwtOptions = {
+      ...jwtOptions,
+      expiresIn: this.configuration.refreshExpiresIn
+    };
+
+    refreshTokenPayload = {
+      ...payload,
+      tokenType: 'refresh',
+      [entity]: authResult[entity]
+    };
+
+    console.log('refresh Token Options and payload: ', refreshTokenJwtOptions, refreshTokenPayload)
+
+    const refreshToken = await this.createAccessToken(refreshTokenPayload, refreshTokenJwtOptions);
+
+    return {
+      accessToken,
+      refreshToken,
+      ...authResult
+    }
   }
 }
 
@@ -48,9 +126,11 @@ module.exports = app => {
   // const authentication = new AuthenticationService(app)
   const authentication = new MyAuthService(app)
 
-  authentication.register('jwt', new JWTStrategy())
-  authentication.register('local', new LocalStrategy())
-  authentication.register('apiKey', new ApiKeyStrategy())
+  // authentication.register('jwt', new JWTStrategy())
+  // authentication.register('local', new LocalStrategy())
+  authentication.register('jwt', new MyJwtStrategy())
+  authentication.register('local', new MyLocalStrategy())
+  // authentication.register('apiKey', new ApiKeyStrategy())
 
   app.use('/authentication', authentication)
   app.configure(expressOauth())

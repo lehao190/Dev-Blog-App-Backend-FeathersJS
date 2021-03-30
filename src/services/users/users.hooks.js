@@ -13,7 +13,7 @@ const allowApiKey = require('../../hooks/allow-api-key');
 
 module.exports = {
   before: {
-    all: [allowApiKey(), authenticate('jwt', 'apiKey'), userTest()],
+    all: [authenticate('jwt'), userTest()],
     find: [],
     get: [],
     create: [hashPassword('password')],

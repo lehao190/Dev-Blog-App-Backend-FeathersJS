@@ -28,12 +28,13 @@
       "audience": "https://yourdomain.com",
       "issuer": "feathers",
       "algorithm": "HS256",
-      "expiresIn": "1d"
+      "expiresIn": "1m"
     },
     "local": {
       "usernameField": "email",
       "passwordField": "password"
     },
+    "refreshExpiresIn": "2m",
     "oauth": {
       "redirect": "/",
       "google": {
