@@ -4,8 +4,6 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async context => {
-    // console.log('params from user-test: ', context.params)
-
     return context
   };
 };

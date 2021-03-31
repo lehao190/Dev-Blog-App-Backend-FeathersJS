@@ -9,18 +9,38 @@ const { NotAuthenticated } = require('@feathersjs/errors')
 
 class MyJwtStrategy extends JWTStrategy {
   async authenticate (data, params) {
-    const jwtAuthenticate = await super.authenticate(data, params)
-    
-    return jwtAuthenticate
+    const { accessToken } = data
+    const { entity } = this.configuration
 
-    // const { accessToken } = data
-    // const { entity } = this.configuration
+    if (!accessToken) {
+      throw new NotAuthenticated('No access token')
+    }
 
-    // if (!accessToken) {
-    //   throw new NotAuthenticated('No access token');
-    // }
+    const payload = await this.authentication.verifyAccessToken(accessToken)
 
-    // this.authentication.verifyAccessToken(accessToken)
+    if (payload.tokenType === 'refresh') {
+      throw new NotAuthenticated('Invalid token. Not an access token')
+    }
+
+    const result = {
+      accessToken,
+      authentication: {
+        strategy: 'jwt',
+        accessToken,
+        payload
+      }
+    }
+
+    if (entity === null) {
+      return result
+    }
+
+    const userEntity = await this.getEntity(payload.sub, params)
+
+    return {
+      ...result,
+      [entity]: userEntity
+    }
   }
 }
 
@@ -56,35 +76,32 @@ class MyAuthService extends AuthenticationService {
 
     if (data.action === 'refresh' && !data.refresh_token) {
       throw new NotAuthenticated('No refresh token')
-    } else if (data.action === 'refresh') {
+    } else {
       authResult = {
         [entity]: auth.user,
         authentication: { strategy: data.strategy }
       }
-
-      // console.log('auth: ', authResult)
     }
 
     const payload = await this.getPayload(authResult, params)
-    
     const jwtOptions = await this.getTokenOptions(authResult, params)
-
     const accessToken = await this.createAccessToken(payload, jwtOptions)
 
     const refreshTokenJwtOptions = {
       ...jwtOptions,
       expiresIn: this.configuration.refreshExpiresIn
-    };
+    }
 
     refreshTokenPayload = {
       ...payload,
       tokenType: 'refresh',
       [entity]: authResult[entity]
-    };
+    }
 
-    console.log('refresh Token Options and payload: ', refreshTokenJwtOptions, refreshTokenPayload)
-
-    const refreshToken = await this.createAccessToken(refreshTokenPayload, refreshTokenJwtOptions);
+    const refreshToken = await this.createAccessToken(
+      refreshTokenPayload,
+      refreshTokenJwtOptions
+    )
 
     return {
       accessToken,
