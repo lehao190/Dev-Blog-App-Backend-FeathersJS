@@ -73,7 +73,7 @@ class MyAuthService extends AuthenticationService {
       params,
       ...this.configuration.authStrategies
     )
-
+    
     if (data.action === 'refresh' && !data.refresh_token) {
       throw new NotAuthenticated('No refresh token')
     } else {
@@ -102,7 +102,7 @@ class MyAuthService extends AuthenticationService {
       refreshTokenPayload,
       refreshTokenJwtOptions
     )
-
+    
     return {
       accessToken,
       refreshToken,
