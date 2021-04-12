@@ -69,6 +69,10 @@ class CustomAuthService extends AuthenticationService {
       params,
       ...this.configuration.authStrategies
     )
+
+    if (authUser.user.password) {
+      delete authUser.user.password
+    }
     
     // Auth result
     authResult = {
