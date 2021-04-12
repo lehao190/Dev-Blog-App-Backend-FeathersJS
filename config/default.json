@@ -34,7 +34,9 @@
       "usernameField": "email",
       "passwordField": "password"
     },
-    "refreshExpiresIn": "2m",
+    "refresh": {
+      "refreshExpiresIn": "2m"
+    },
     "oauth": {
       "redirect": "/",
       "google": {

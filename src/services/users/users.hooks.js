@@ -5,17 +5,13 @@ const {
   protect
 } = require('@feathersjs/authentication-local').hooks
 
-const userTest = require('../../hooks/user-test')
-
-const allowAnonymous = require('../../hooks/allow-anonymous')
-
-const allowApiKey = require('../../hooks/allow-api-key');
+const checkProvider = require('../../hooks/check-provider');
 
 module.exports = {
   before: {
-    all: [userTest()],
+    all: [],
     find: [authenticate('jwt')],
-    get: [authenticate('jwt')],
+    get: [authenticate('jwt'), checkProvider()],
     create: [hashPassword('password')],
     update: [hashPassword('password'), authenticate('jwt')],
     patch: [hashPassword('password'), authenticate('jwt')],

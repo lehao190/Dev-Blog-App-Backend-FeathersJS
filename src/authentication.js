@@ -7,7 +7,8 @@ const { LocalStrategy } = require('@feathersjs/authentication-local')
 const { expressOauth } = require('@feathersjs/authentication-oauth')
 const { NotAuthenticated } = require('@feathersjs/errors')
 
-class MyJwtStrategy extends JWTStrategy {
+// Custom JWT
+class CustomJwtStrategy extends JWTStrategy {
   async authenticate (data, params) {
     const { accessToken } = data
     const { entity } = this.configuration
@@ -18,6 +19,7 @@ class MyJwtStrategy extends JWTStrategy {
 
     const payload = await this.authentication.verifyAccessToken(accessToken)
 
+    // Only for Access Token
     if (payload.tokenType === 'refresh') {
       throw new NotAuthenticated('Invalid token. Not an access token')
     }
@@ -44,15 +46,8 @@ class MyJwtStrategy extends JWTStrategy {
   }
 }
 
-class MyLocalStrategy extends LocalStrategy {
-  async getEntity (entity, params) {
-    const userEntity = await super.getEntity(entity, params)
-
-    return userEntity
-  }
-}
-
-class MyAuthService extends AuthenticationService {
+// Custom Auth Service
+class CustomAuthService extends AuthenticationService {
   async create (data, params) {
     const { entity } = this.configuration
 
@@ -68,36 +63,42 @@ class MyAuthService extends AuthenticationService {
     let refreshTokenPayload
     let authResult
 
-    const auth = await this.authenticate(
+    // Authenticate User
+    const authUser = await this.authenticate(
       data,
       params,
       ...this.configuration.authStrategies
     )
     
-    if (data.action === 'refresh' && !data.refresh_token) {
-      throw new NotAuthenticated('No refresh token')
-    } else {
-      authResult = {
-        [entity]: auth.user,
-        authentication: { strategy: data.strategy }
-      }
+    // Auth result
+    authResult = {
+      [entity]: authUser.user,
+      authentication: { strategy: data.strategy }
     }
 
+    // Access Token Payload
     const payload = await this.getPayload(authResult, params)
+
+    // Access Token options
     const jwtOptions = await this.getTokenOptions(authResult, params)
+
+    // Create Access Token
     const accessToken = await this.createAccessToken(payload, jwtOptions)
 
+    // Refresh Token options
     const refreshTokenJwtOptions = {
       ...jwtOptions,
-      expiresIn: this.configuration.refreshExpiresIn
+      expiresIn: this.configuration.refresh.refreshExpiresIn
     }
-
+    
+    // Refresh Token Payload
     refreshTokenPayload = {
       ...payload,
       tokenType: 'refresh',
       [entity]: authResult[entity]
     }
 
+    // Create Refresh Token
     const refreshToken = await this.createAccessToken(
       refreshTokenPayload,
       refreshTokenJwtOptions
@@ -111,43 +112,11 @@ class MyAuthService extends AuthenticationService {
   }
 }
 
-class AnonymousStrategy extends AuthenticationBaseStrategy {
-  async authenticate (authentication, params) {
-    return {
-      anonymous: true
-    }
-  }
-}
-
-class ApiKeyStrategy extends AuthenticationBaseStrategy {
-  async authenticate (authentication, params) {
-    const { token } = authentication
-
-    const config = this.authentication.configuration[this.name]
-
-    // const user = await this.app.service('users').get(1, params)
-
-    const match = config.allowedKeys.includes(token)
-    if (!match) throw new NotAuthenticated('Incorrect API Key')
-
-    return {
-      authentication: {
-        strategy: 'apiKey'
-      }
-      // user
-    }
-  }
-}
-
 module.exports = app => {
-  // const authentication = new AuthenticationService(app)
-  const authentication = new MyAuthService(app)
+  const authentication = new CustomAuthService(app)
 
-  // authentication.register('jwt', new JWTStrategy())
-  // authentication.register('local', new LocalStrategy())
-  authentication.register('jwt', new MyJwtStrategy())
-  authentication.register('local', new MyLocalStrategy())
-  // authentication.register('apiKey', new ApiKeyStrategy())
+  authentication.register('jwt', new CustomJwtStrategy())
+  authentication.register('local', new LocalStrategy())
 
   app.use('/authentication', authentication)
   app.configure(expressOauth())

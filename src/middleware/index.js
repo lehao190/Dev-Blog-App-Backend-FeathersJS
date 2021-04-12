@@ -10,7 +10,7 @@ module.exports = function (app) {
       password: req.body.password
     });
 
-    console.log('auth data: ', auth)
+    // console.log('auth data: ', auth)
 
     res.json('Hello Dude you good, Yeah man');
   });
