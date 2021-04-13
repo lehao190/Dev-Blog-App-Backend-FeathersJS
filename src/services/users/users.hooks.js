@@ -11,7 +11,7 @@ module.exports = {
   before: {
     all: [],
     find: [authenticate('jwt')],
-    get: [authenticate('jwt'), checkProvider()],
+    get: [checkProvider(), authenticate('jwt')],
     create: [hashPassword('password')],
     update: [hashPassword('password'), authenticate('jwt')],
     patch: [hashPassword('password'), authenticate('jwt')],
