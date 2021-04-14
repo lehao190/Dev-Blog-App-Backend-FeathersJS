@@ -12,13 +12,14 @@ module.exports = function (app) {
     session({
       store: new RedisStore({ client: redisClient }),
       secret: 'session-secret',
+      name: 'user',
       saveUninitialized: false,
       resave: false,
       cookie: {
         sameSite: true,
         httpOnly: true,
         secure: false,
-        maxAge: 7 * 24 * 60 * 60 * 1000
+        maxAge: 1 * 60 * 60 * 1000
       }
     })
   )
@@ -43,16 +44,13 @@ module.exports = function (app) {
         user
       }
 
-      req.authentication = req.session.authentication
-
-      res.status(201).json(req.authentication)
+      res.status(201).json(req.session.authentication)
     } catch (error) {
       res.status(error.code).json(error)
     }
   })
 
-  // app.post('/aha', async (req, res) => {
-  //   console.log('Auth Session: ', req.session.authentication)
-  //   res.json('Nothing mate')
-  // })
+  app.post('/aha', async (req, res) => {
+    res.json(req.session.authentication)
+  })
 }

@@ -28,7 +28,13 @@ app.configure(configuration());
 app.use(helmet({
   contentSecurityPolicy: false
 }));
-app.use(cors());
+
+const corsOptions = {
+  origin: "http://localhost:8080",
+  credentials: true 
+}
+
+app.use(cors(corsOptions));
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
