@@ -38,7 +38,7 @@
       "refreshExpiresIn": "2m"
     },
     "oauth": {
-      "redirect": "/",
+      "redirect": "http://localhost:8080",
       "google": {
         "key": "<google oauth key>",
         "secret": "<google oauth secret>",
@@ -53,8 +53,8 @@
         "secret": "<facebook oauth secret>"
       },
       "github": {
-        "key": "<github oauth key>",
-        "secret": "<github oauth secret>"
+        "key": "7b5ae2041031e1b02a5d",
+        "secret": "c97ecb62e0ac7ccddfcb1e2a91123423d7013e51"
       }
     }
   },

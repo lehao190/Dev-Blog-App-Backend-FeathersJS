@@ -13,7 +13,7 @@ module.exports = (options = {}) => {
     }
 
     // Only for Internal call when login
-    if (params.provider === 'rest' && !params.headers.authorization) {
+    if (params.provider === 'rest' && !params.headers.authorization && !params.authStrategies) {
       throw new Error('Không thể gọi API')
     }
 

@@ -50,7 +50,13 @@ module.exports = function (app) {
     }
   })
 
-  app.post('/aha', async (req, res) => {
-    res.json(req.session.authentication)
+  app.get('/me', async (req, res) => {
+    const { user } = req.session.authentication
+
+    if (!user) {
+      throw new Error('No luck found user !!!')
+    }
+
+    return res.status(200).json(user)
   })
 }
