@@ -38,7 +38,7 @@
       "refreshExpiresIn": "2m"
     },
     "oauth": {
-      "redirect": "http://localhost:8080",
+      "redirect": "http://localhost:8080/",
       "google": {
         "key": "<google oauth key>",
         "secret": "<google oauth secret>",

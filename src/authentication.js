@@ -4,7 +4,11 @@ const {
   JWTStrategy
 } = require('@feathersjs/authentication')
 const { LocalStrategy } = require('@feathersjs/authentication-local')
-const { expressOauth, OAuthStrategy } = require('@feathersjs/authentication-oauth')
+
+const {
+  expressOauth,
+  OAuthStrategy
+} = require('@feathersjs/authentication-oauth')
 const { NotAuthenticated } = require('@feathersjs/errors')
 
 // Custom JWT
@@ -64,16 +68,12 @@ class CustomAuthService extends AuthenticationService {
     let authResult
 
     // Authenticate User
-    const authUser = await this.authenticate(
-      data,
-      params,
-      ...authStrategies
-    )
+    const authUser = await this.authenticate(data, params, ...authStrategies)
 
     if (authUser.user.password) {
       delete authUser.user.password
     }
-    
+
     // Auth result
     authResult = {
       [entity]: authUser.user,
@@ -94,7 +94,7 @@ class CustomAuthService extends AuthenticationService {
       ...jwtOptions,
       expiresIn: this.configuration.refresh.refreshExpiresIn
     }
-    
+
     // Refresh Token Payload
     refreshTokenPayload = {
       ...payload,
@@ -107,7 +107,16 @@ class CustomAuthService extends AuthenticationService {
       refreshTokenPayload,
       refreshTokenJwtOptions
     )
+
+    // console.log('params from authService: ', params)
     
+    params.session.authentication = {
+      refreshToken,
+      user: authResult.user
+    }
+
+    params.session.save()
+
     return {
       accessToken,
       refreshToken,
@@ -117,16 +126,30 @@ class CustomAuthService extends AuthenticationService {
 }
 
 class GitHubStrategy extends OAuthStrategy {
-  async getEntityData(profile) {
-    const baseData = await super.getEntityData(profile);
+  async authenticate(authentication, params) {
+    const auth = await super.authenticate(authentication, params)
+
+    // console.log('auth result: ', auth)
+
+    return auth
+  }
+
+  async getEntityData (profile) {
+    const baseData = await super.getEntityData(profile)
 
     return {
       ...baseData,
       // You can also set the display name to profile.name
-      name: profile.login,
+      name: profile.login
       // The user email address (if available)
-      email: profile.email
-    };
+      // email: profile.login
+    }
+  }
+
+  async getRedirect (data) {
+    const a = await super.getRedirect(data)
+
+    return 'http://localhost:8080/'
   }
 }
 
