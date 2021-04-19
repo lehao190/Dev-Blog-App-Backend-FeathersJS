@@ -4,6 +4,7 @@ const {
   JWTStrategy
 } = require('@feathersjs/authentication')
 const { LocalStrategy } = require('@feathersjs/authentication-local')
+
 const {
   expressOauth,
   OAuthStrategy
