@@ -125,15 +125,9 @@ class CustomAuthService extends AuthenticationService {
   }
 }
 
+// Github Oauth Auth
 class GitHubStrategy extends OAuthStrategy {
-  async authenticate(authentication, params) {
-    const auth = await super.authenticate(authentication, params)
-
-    // console.log('auth result: ', auth)
-
-    return auth
-  }
-
+  // Get user profile from Oauth Provider
   async getEntityData (profile) {
     const baseData = await super.getEntityData(profile)
 
@@ -146,10 +140,13 @@ class GitHubStrategy extends OAuthStrategy {
     }
   }
 
+  // Redirect Authenticated User to homepage
   async getRedirect (data) {
-    const a = await super.getRedirect(data)
+    const redirectURL = await super.getRedirect(data)
 
-    return 'http://localhost:8080/'
+    const newURL = redirectURL.split('#')
+
+    return newURL[0] + '#/#' + newURL[1]
   }
 }
 

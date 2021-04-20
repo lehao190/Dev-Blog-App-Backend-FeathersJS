@@ -32,46 +32,16 @@ module.exports = function (app) {
     next()
   })
 
-  // Login Route
-  app.post('/login', async (req, res) => {
-    try {
-      const { email, password } = req.body
-
-      // Authenticate user with Local Strategy
-      const { user, refreshToken, accessToken } = await app
-        .service('authentication')
-        .create({
-          strategy: 'local',
-          email,
-          password
-        })
-
-      // res.json({
-      //   refreshToken,
-      //   user
-      // })
-
-      // create User's Session
-      req.session.authentication = {
-        refreshToken,
-        user
-      }
-
-      res.status(201).json(req.session.authentication)
-    } catch (error) {
-      res.status(error.code).json(error)
-    }
-  })
-
+  // Get user on Refresh
   app.get('/me', async (req, res) => {
-    // console.log('session authentication: ', req.session)
+    const { authentication } = req.session
 
-    const { user } = req.session.authentication
-
-    if (!user) {
-      throw new Error('No luck found user !!!')
+    if (!authentication) {
+      return res.status(401).json({
+        message: 'Chưa đăng nhập !!!'
+      })
     }
 
-    return res.status(200).json(user)
+    return res.status(200).json(authentication.user)
   })
 }
