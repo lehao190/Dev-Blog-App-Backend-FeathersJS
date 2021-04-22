@@ -9,7 +9,9 @@ const {
   expressOauth,
   OAuthStrategy
 } = require('@feathersjs/authentication-oauth')
-const { NotAuthenticated } = require('@feathersjs/errors')
+const { NotAuthenticated, BadRequest } = require('@feathersjs/errors')
+
+const { validateLogin } = require('./utils/handleErrors/validate_inputs')
 
 // Custom JWT
 class CustomJwtStrategy extends JWTStrategy {
@@ -53,6 +55,18 @@ class CustomJwtStrategy extends JWTStrategy {
 // Custom Auth Service
 class CustomAuthService extends AuthenticationService {
   async create (data, params) {
+    if (!params.authStrategies) {
+      const { email, password } = data
+
+      const { errors, isValid } = validateLogin(email, password)
+      
+      if (!isValid) {
+        throw new BadRequest('Giá trị nhập vào không đúng', {
+          errors
+        })
+      }
+    }
+
     const { entity } = this.configuration
 
     const authStrategies =
@@ -108,8 +122,6 @@ class CustomAuthService extends AuthenticationService {
       refreshTokenJwtOptions
     )
 
-    // console.log('params from authService: ', params)
-    
     params.session.authentication = {
       refreshToken,
       user: authResult.user
@@ -119,8 +131,8 @@ class CustomAuthService extends AuthenticationService {
 
     return {
       accessToken,
-      refreshToken,
       ...authResult
+      // refreshToken
     }
   }
 }

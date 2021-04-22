@@ -6,7 +6,7 @@ const { NotFound, GeneralError, BadRequest } = require('@feathersjs/errors');
 
 module.exports = (options = {}) => {
   return async context => {
-    // console.log('check-provider params: ', context.params)
+    // console.log('check-provider data: ', context.data)
 
     const { params } = context
 

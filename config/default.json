@@ -32,7 +32,8 @@
     },
     "local": {
       "usernameField": "email",
-      "passwordField": "password"
+      "passwordField": "password",
+      "errorMessage": "Tài khoản hoặc mật khẩu không tồn tại !"
     },
     "refresh": {
       "refreshExpiresIn": "2m"

@@ -5,7 +5,9 @@ const {
   protect
 } = require('@feathersjs/authentication-local').hooks
 
-const checkProvider = require('../../hooks/check-provider');
+const checkProvider = require('../../hooks/check-provider')
+
+const authResult = require('../../hooks/auth-result')
 
 module.exports = {
   before: {
