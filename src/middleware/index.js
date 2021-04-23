@@ -24,7 +24,7 @@ const sessionOpts = session({
 module.exports = function (app) {
   // Add your custom middleware here. Remember that
   // in Express, the order matters.
-  
+
   app.use(sessionOpts)
 
   app.use((req, res, next) => {
@@ -43,5 +43,31 @@ module.exports = function (app) {
     }
 
     return res.status(200).json(authentication.user)
+  })
+
+  // Issue new token when access token expired
+  app.post('/refresh_tokens', async (req, res) => {
+    const { accessToken } = req.body
+    const { refreshToken } = req.session.authentication
+
+    const payload = await app
+      .service('authentication')
+      .verifyAccessToken(accessToken, { ignoreExpiration: true })
+
+    if (Date.now() >= payload.exp * 1000 && refreshToken) {
+      const newAccessToken = await app
+        .service('authentication')
+        .createAccessToken({
+          sub: payload.sub
+        })
+
+      return res.json({
+        accessToken: newAccessToken
+      })
+    }
+
+    return res.status(401).json({
+      message: 'Invalid Refresh Token'
+    })
   })
 }

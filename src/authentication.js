@@ -16,18 +16,50 @@ const { validateLogin } = require('./utils/handleErrors/validate_inputs')
 // Custom JWT
 class CustomJwtStrategy extends JWTStrategy {
   async authenticate (data, params) {
-    const { accessToken } = data
+    let { accessToken } = data
     const { entity } = this.configuration
 
     if (!accessToken) {
       throw new NotAuthenticated('No access token')
     }
 
-    const payload = await this.authentication.verifyAccessToken(accessToken)
+    let payload = await this.authentication.verifyAccessToken(accessToken)
+
+
+    // Create Access Token when expired
+    // let payload = await this.authentication.verifyAccessToken(accessToken, {
+    //   ignoreExpiration: true
+    // })
+
+    // if (Date.now() >= payload.exp * 1000 && params.session.authentication.refreshToken) {
+    //   accessToken = await this.authentication.createAccessToken({
+    //     sub: payload.sub
+    //   })
+
+    //   console.log('issue new access token: ', accessToken)
+    // }
+    // console.log('current access token: ', accessToken)
+
+    
+
+    // let payload = await this.authentication
+    //   .verifyAccessToken(accessToken)
+    //   .catch(async error => {
+    //     console.log(error)
+
+    //     // Expired Access Token
+    //     if (error.data.expiredAt && params.session.authentication.refreshToken) {
+    //       console.log('token expired Dude !!!')
+
+    //       // await this.authentication.createAccessToken()
+    //     } else {
+    //       throw error
+    //     }
+    //   })
 
     // Only for Access Token
     if (payload.tokenType === 'refresh') {
-      throw new NotAuthenticated('Invalid token. Not an access token')
+      throw new NotAuthenticated('Không phải access token !!!')
     }
 
     const result = {
@@ -45,6 +77,11 @@ class CustomJwtStrategy extends JWTStrategy {
 
     const userEntity = await this.getEntity(payload.sub, params)
 
+    // console.log('Result of JWT: ', {
+    //   ...result,
+    //   [entity]: userEntity
+    // })
+
     return {
       ...result,
       [entity]: userEntity
@@ -55,11 +92,12 @@ class CustomJwtStrategy extends JWTStrategy {
 // Custom Auth Service
 class CustomAuthService extends AuthenticationService {
   async create (data, params) {
+    // Validate inputs
     if (!params.authStrategies) {
       const { email, password } = data
 
       const { errors, isValid } = validateLogin(email, password)
-      
+
       if (!isValid) {
         throw new BadRequest('Giá trị nhập vào không đúng', {
           errors
