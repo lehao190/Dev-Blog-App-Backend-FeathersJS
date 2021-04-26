@@ -16,50 +16,18 @@ const { validateLogin } = require('./utils/handleErrors/validate_inputs')
 // Custom JWT
 class CustomJwtStrategy extends JWTStrategy {
   async authenticate (data, params) {
-    let { accessToken } = data
+    const { accessToken } = data
     const { entity } = this.configuration
 
     if (!accessToken) {
       throw new NotAuthenticated('No access token')
     }
 
-    let payload = await this.authentication.verifyAccessToken(accessToken)
-
-
-    // Create Access Token when expired
-    // let payload = await this.authentication.verifyAccessToken(accessToken, {
-    //   ignoreExpiration: true
-    // })
-
-    // if (Date.now() >= payload.exp * 1000 && params.session.authentication.refreshToken) {
-    //   accessToken = await this.authentication.createAccessToken({
-    //     sub: payload.sub
-    //   })
-
-    //   console.log('issue new access token: ', accessToken)
-    // }
-    // console.log('current access token: ', accessToken)
-
-    
-
-    // let payload = await this.authentication
-    //   .verifyAccessToken(accessToken)
-    //   .catch(async error => {
-    //     console.log(error)
-
-    //     // Expired Access Token
-    //     if (error.data.expiredAt && params.session.authentication.refreshToken) {
-    //       console.log('token expired Dude !!!')
-
-    //       // await this.authentication.createAccessToken()
-    //     } else {
-    //       throw error
-    //     }
-    //   })
+    const payload = await this.authentication.verifyAccessToken(accessToken)
 
     // Only for Access Token
     if (payload.tokenType === 'refresh') {
-      throw new NotAuthenticated('Không phải access token !!!')
+      throw new NotAuthenticated('Không phải token hợp lệ !!!')
     }
 
     const result = {
@@ -76,11 +44,6 @@ class CustomJwtStrategy extends JWTStrategy {
     }
 
     const userEntity = await this.getEntity(payload.sub, params)
-
-    // console.log('Result of JWT: ', {
-    //   ...result,
-    //   [entity]: userEntity
-    // })
 
     return {
       ...result,
@@ -111,9 +74,7 @@ class CustomAuthService extends AuthenticationService {
       params.authStrategies || this.configuration.authStrategies
 
     if (!authStrategies.length) {
-      throw new NotAuthenticated(
-        'No Authentication Strategies allowed to create JWT'
-      )
+      throw new NotAuthenticated('Không có Strategy hợp lệ để tạo JWT')
     }
 
     let refreshTokenPayload
@@ -200,12 +161,37 @@ class GitHubStrategy extends OAuthStrategy {
   }
 }
 
+// Google Oauth Auth
+class GoogleStrategy extends OAuthStrategy {
+  async getEntityData (profile) {
+    // this will set 'googleId'
+    const baseData = await super.getEntityData(profile)
+
+    // this will grab the picture and email address of the Google profile
+    return {
+      ...baseData,
+      name: profile.name,
+      email: profile.email
+    }
+  }
+
+  // Redirect Authenticated User to homepage
+  async getRedirect (data) {
+    const redirectURL = await super.getRedirect(data)
+
+    const newURL = redirectURL.split('#')
+
+    return newURL[0] + '#/#' + newURL[1]
+  }
+}
+
 module.exports = app => {
   const authentication = new CustomAuthService(app)
 
   authentication.register('jwt', new CustomJwtStrategy())
   authentication.register('local', new LocalStrategy())
   authentication.register('github', new GitHubStrategy())
+  authentication.register('google', new GoogleStrategy())
 
   app.use('/authentication', authentication)
   app.configure(expressOauth())

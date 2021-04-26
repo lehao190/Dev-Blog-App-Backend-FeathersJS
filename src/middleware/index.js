@@ -1,3 +1,5 @@
+const { NotAuthenticated } = require('@feathersjs/errors')
+
 const session = require('express-session')
 const redis = require('redis')
 
@@ -11,7 +13,7 @@ const sessionOpts = session({
   saveUninitialized: false,
   resave: false,
   cookie: {
-    sameSite: true,
+    sameSite: false,
     httpOnly: true,
     secure: false,
     maxAge: 1 * 60 * 60 * 1000
@@ -50,24 +52,43 @@ module.exports = function (app) {
     const { accessToken } = req.body
     const { refreshToken } = req.session.authentication
 
-    const payload = await app
+    const payloadAccessToken = await app
       .service('authentication')
       .verifyAccessToken(accessToken, { ignoreExpiration: true })
 
-    if (Date.now() >= payload.exp * 1000 && refreshToken) {
+    const payloadRefreshToken = await app
+      .service('authentication')
+      .verifyAccessToken(refreshToken, { ignoreExpiration: true })
+
+    // Destroy Session when Refresh Token expired
+    if (Date.now() >= payloadRefreshToken.exp * 1000) {
+      req.session.destroy(err => {
+        if (err) {
+          console.log('Không thể hủy Session')
+          throw new err()
+        }
+      })
+
+      res.clearCookie('user')
+
+      return res.status(401).json({
+        message: 'Refresh Token hết thời hạn',
+        iat: payloadRefreshToken.iat,
+        exp: payloadRefreshToken.exp
+      })
+    }
+
+    // Issue Access Token if Refresh Token still alive
+    if (Date.now() >= payloadAccessToken.exp * 1000 && refreshToken) {
       const newAccessToken = await app
         .service('authentication')
         .createAccessToken({
-          sub: payload.sub
+          sub: payloadAccessToken.sub
         })
 
       return res.json({
         accessToken: newAccessToken
       })
     }
-
-    return res.status(401).json({
-      message: 'Invalid Refresh Token'
-    })
   })
 }

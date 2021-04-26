@@ -39,23 +39,23 @@
       "refreshExpiresIn": "2m"
     },
     "oauth": {
-      "redirect": "http://localhost:8080/",
+      "redirect": "http://localhost:8080",
       "google": {
-        "key": "<google oauth key>",
-        "secret": "<google oauth secret>",
+        "key": "916536707093-057i62n5ikur47tngas7ik127ish54nr.apps.googleusercontent.com",
+        "secret": "MgBMr1WyRcG2wkwlvQWP3izJ",
+        "redirect_uri": "http://localhost:3030/oauth/google/callback",
+        "callback": "http://localhost:3030/oauth/google/authenticate",
         "scope": [
           "email",
           "profile",
           "openid"
         ]
       },
-      "facebook": {
-        "key": "<facebook oauth key>",
-        "secret": "<facebook oauth secret>"
-      },
       "github": {
         "key": "7b5ae2041031e1b02a5d",
-        "secret": "c97ecb62e0ac7ccddfcb1e2a91123423d7013e51"
+        "secret": "c97ecb62e0ac7ccddfcb1e2a91123423d7013e51",
+        "redirect_uri": "http://localhost:3030/oauth/github/callback",
+        "callback": "http://localhost:3030/oauth/github/authenticate"
       }
     }
   },
