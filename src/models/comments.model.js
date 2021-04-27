@@ -1,21 +1,28 @@
 /* eslint-disable no-console */
 
-// posts-model.js - A KnexJS
+// comments-model.js - A KnexJS
 //
 // See http://knexjs.org/
 // for more of what you can do here.
 module.exports = function (app) {
   const db = app.get('knexClient')
-  const tableName = 'posts'
+  const tableName = 'comments'
   db.schema.hasTable(tableName).then(exists => {
     if (!exists) {
       db.schema
         .createTable(tableName, table => {
           table.increments('id').notNullable()
-          table.string('title')
-          table.text('body')
-          table.string('post_image')
-          table.boolean('saved')
+          table.string('comment_text')
+          table.integer('parent_comment_id')
+          table.integer('level')
+          table
+            .integer('postId')
+            .notNullable()
+            .unsigned()
+            .references('id')
+            .inTable('posts')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE')
           table
             .integer('userId')
             .notNullable()

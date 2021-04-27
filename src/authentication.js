@@ -140,14 +140,16 @@ class CustomAuthService extends AuthenticationService {
 class GitHubStrategy extends OAuthStrategy {
   // Get user profile from Oauth Provider
   async getEntityData (profile) {
+    const { name, email, avatar_url } = profile
+
     const baseData = await super.getEntityData(profile)
 
     return {
       ...baseData,
       // You can also set the display name to profile.name
-      name: profile.login
-      // The user email address (if available)
-      // email: profile.login
+      username: name,
+      email,
+      user_avatar: avatar_url
     }
   }
 

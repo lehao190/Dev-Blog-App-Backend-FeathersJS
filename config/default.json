@@ -61,6 +61,13 @@
   },
   "mysql": {
     "client": "mysql2",
-    "connection": "mysql://root:@localhost:3306/dev_blog"
+    "connection": "mysql://root:@localhost:3306/dev_blog",
+    "migrations": {
+      "directory": "../src/migrations",
+      "tableName": "knex_migrations"
+    },
+    "seeds": {
+      "directory": "../src/seeds"
+    }
   }
 }
