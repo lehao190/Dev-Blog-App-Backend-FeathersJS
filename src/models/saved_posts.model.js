@@ -1,17 +1,18 @@
 /* eslint-disable no-console */
 
-// likes-model.js - A KnexJS
+// saved_posts-model.js - A KnexJS
 //
 // See http://knexjs.org/
 // for more of what you can do here.
 module.exports = function (app) {
   const db = app.get('knexClient')
-  const tableName = 'likes'
+  const tableName = 'saved_posts'
   db.schema.hasTable(tableName).then(exists => {
     if (!exists) {
       db.schema
         .createTable(tableName, table => {
           table.increments('id').notNullable()
+          table.boolean('saved').defaultTo(false)
           table
             .integer('postId')
             .notNullable()

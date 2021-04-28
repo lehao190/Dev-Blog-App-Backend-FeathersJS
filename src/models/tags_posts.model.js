@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 
-// likes-model.js - A KnexJS
+// tags_posts-model.js - A KnexJS
 //
 // See http://knexjs.org/
 // for more of what you can do here.
 module.exports = function (app) {
   const db = app.get('knexClient')
-  const tableName = 'likes'
+  const tableName = 'tags_posts'
   db.schema.hasTable(tableName).then(exists => {
     if (!exists) {
       db.schema
@@ -21,11 +21,11 @@ module.exports = function (app) {
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
           table
-            .integer('userId')
+            .integer('tagsId')
             .notNullable()
             .unsigned()
             .references('id')
-            .inTable('users')
+            .inTable('tags')
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
           table.timestamps(false, true)

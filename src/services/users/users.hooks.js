@@ -5,15 +5,11 @@ const {
   protect
 } = require('@feathersjs/authentication-local').hooks
 
-const checkProvider = require('../../hooks/check-provider')
-
-const authResult = require('../../hooks/auth-result')
-
 module.exports = {
   before: {
     all: [],
     find: [authenticate('jwt')],
-    get: [checkProvider(), authenticate('jwt')],
+    get: [authenticate('jwt')],
     create: [hashPassword('password')],
     update: [hashPassword('password'), authenticate('jwt')],
     patch: [hashPassword('password'), authenticate('jwt')],

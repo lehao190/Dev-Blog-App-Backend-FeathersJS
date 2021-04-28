@@ -13,6 +13,7 @@ module.exports = function (app) {
       db.schema
         .createTable(tableName, table => {
           table.increments('id').notNullable()
+          table.boolean('admin').defaultTo(false)
           table.string('username')
           table.string('email').unique()
           table.string('password')

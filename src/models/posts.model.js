@@ -15,7 +15,7 @@ module.exports = function (app) {
           table.string('title')
           table.text('body')
           table.string('post_image')
-          table.boolean('saved')
+          table.integer('count_likes').defaultTo(0)
           table
             .integer('userId')
             .notNullable()

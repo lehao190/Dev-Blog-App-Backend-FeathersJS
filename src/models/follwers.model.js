@@ -1,27 +1,27 @@
 /* eslint-disable no-console */
 
-// likes-model.js - A KnexJS
+// follwers-model.js - A KnexJS
 //
 // See http://knexjs.org/
 // for more of what you can do here.
 module.exports = function (app) {
   const db = app.get('knexClient')
-  const tableName = 'likes'
+  const tableName = 'follwers'
   db.schema.hasTable(tableName).then(exists => {
     if (!exists) {
       db.schema
         .createTable(tableName, table => {
-          table.increments('id').notNullable()
+          table.increments('id')
           table
-            .integer('postId')
+            .integer('following_userId')
             .notNullable()
             .unsigned()
             .references('id')
-            .inTable('posts')
+            .inTable('users')
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
           table
-            .integer('userId')
+            .integer('followed_userId')
             .notNullable()
             .unsigned()
             .references('id')
