@@ -5,6 +5,8 @@ const {
   protect
 } = require('@feathersjs/authentication-local').hooks
 
+const createUserAvatar = require('../../hooks/create-user-avatar');
+
 module.exports = {
   before: {
     all: [],
@@ -24,7 +26,7 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [],
+    create: [createUserAvatar()],
     update: [],
     patch: [],
     remove: []
