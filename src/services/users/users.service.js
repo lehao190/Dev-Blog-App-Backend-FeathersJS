@@ -6,7 +6,7 @@ const Multer = require('multer')
 const { firebaseBucket } = require('../../app.js')
 const path = require('path')
 const { v4: uuidv4 } = require('uuid')
-const {format} = require('util')
+const { format } = require('util')
 
 module.exports = function (app) {
   const options = {
@@ -29,36 +29,35 @@ module.exports = function (app) {
       const bucketName = firebaseBucket.name
       const fileToken = uuidv4()
       const fileName = Date.now().toString() + req.file.originalname
-
-      // Create a new blob in the bucket and upload the file data.
       const blob = firebaseBucket.file(fileName)
 
-  
-      const blobStream = blob.createWriteStream({
-        metadata: {
-          contentType: req.file.mimetype,
+      // Upload file to firebase
+      const URL = await new Promise((resolve, reject) => {
+        const blobStream = blob.createWriteStream({
           metadata: {
-            firebaseStorageDownloadTokens: fileToken
+            contentType: req.file.mimetype,
+            metadata: {
+              firebaseStorageDownloadTokens: fileToken
+            }
           }
-        }
+        })
+  
+        blobStream.on('error', err => {
+          reject(err)
+        })
+  
+        let avatarURL
+  
+        blobStream.on('finish', () => {
+          avatarURL = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${fileName}?alt=media&token=${fileToken}`
+          console.log('Upload Successfully, Here is Avatar URL: ', avatarURL)
+          resolve(avatarURL)
+        })
+  
+        blobStream.end(req.file.buffer)
       })
 
-      blobStream.on('error', err => {
-        console.log('error Mate: ', err.message)
-        next(err)
-      })
-
-      let avatarURL
-
-      blobStream.on('finish', () => {
-        avatarURL = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${fileName}?alt=media&token=${fileToken}`
-        console.log(avatarURL)
-      })
-
-      console.log('after: ', avatarURL)
-      req.feathers.avatarURL = avatarURL
-
-      blobStream.end(req.file.buffer)
+      req.feathers.avatarURL = URL
       next()
     },
     new Users(options, app)

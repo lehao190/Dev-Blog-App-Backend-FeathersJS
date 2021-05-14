@@ -1,3 +1,4 @@
+// Firebase Configuration
 const admin = require('firebase-admin')
 const serviceAccount = require('../serviceAccountKey.json')
 
@@ -7,6 +8,8 @@ admin.initializeApp({
 })
 const firebaseBucket = admin.storage().bucket()
 exports.firebaseBucket = firebaseBucket
+
+/*  FireBase Config  */
 
 const path = require('path')
 const favicon = require('serve-favicon')

@@ -5,12 +5,12 @@
 module.exports = (options = {}) => {
   return async context => {
     const { result, app, params } = context
+    // update user's avatar
+    result.user_avatar = params.avatarURL
 
-    // console.log('params: ', params)
-
-    // await app.service('users').patch(result.id, {
-    //   user_avatar: params.avatarURL
-    // }, params)
+    await app.service('users').patch(result.id, {
+      user_avatar: params.avatarURL
+    })
 
     return context;
   };
