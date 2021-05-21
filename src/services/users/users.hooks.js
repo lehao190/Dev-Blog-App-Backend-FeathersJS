@@ -12,7 +12,7 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword('password')],
+    create: [hashPassword('password'), createUserAvatar()],
     update: [hashPassword('password'), authenticate('jwt')],
     patch: [hashPassword('password'), authenticate('jwt')],
     remove: [authenticate('jwt')]
@@ -26,7 +26,7 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [createUserAvatar()],
+    create: [],
     update: [],
     patch: [],
     remove: []

@@ -4,14 +4,39 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async context => {
-    const { result, app, params } = context
-    // update user's avatar
-    result.user_avatar = params.avatarURL
+    const { data, app, params } = context
+    // update user's avatar Local Strategy
+    if (!params.authStrategies || params.authStrategies.length < 1) {
+      const { blob, file, bucketName, fileName, fileToken } = params
 
-    await app.service('users').patch(result.id, {
-      user_avatar: params.avatarURL
-    })
+      const URL = await new Promise((resolve, reject) => {
+        const blobStream = blob.createWriteStream({
+          metadata: {
+            contentType: file.mimetype,
+            metadata: {
+              firebaseStorageDownloadTokens: fileToken
+            }
+          }
+        })
 
-    return context;
-  };
-};
+        blobStream.on('error', err => {
+          reject(err)
+        })
+
+        let avatarURL
+
+        blobStream.on('finish', () => {
+          avatarURL = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${fileName}?alt=media&token=${fileToken}`
+          console.log('Upload Successfully, Here is Avatar URL: ', avatarURL)
+          resolve(avatarURL)
+        })
+
+        blobStream.end(file.buffer)
+      })
+
+      data.user_avatar = URL
+    }
+
+    return context
+  }
+}

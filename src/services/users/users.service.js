@@ -26,38 +26,19 @@ module.exports = function (app) {
     '/users',
     multer.single('user_avatar'),
     async (req, res, next) => {
-      const bucketName = firebaseBucket.name
-      const fileToken = uuidv4()
-      const fileName = Date.now().toString() + req.file.originalname
-      const blob = firebaseBucket.file(fileName)
+      if (req.file) {
+        const bucketName = firebaseBucket.name
+        const fileToken = uuidv4()
+        const fileName = Date.now().toString() + req.file.originalname
+        const blob = firebaseBucket.file(fileName)
 
-      // Upload file to firebase
-      const URL = await new Promise((resolve, reject) => {
-        const blobStream = blob.createWriteStream({
-          metadata: {
-            contentType: req.file.mimetype,
-            metadata: {
-              firebaseStorageDownloadTokens: fileToken
-            }
-          }
-        })
-  
-        blobStream.on('error', err => {
-          reject(err)
-        })
-  
-        let avatarURL
-  
-        blobStream.on('finish', () => {
-          avatarURL = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${fileName}?alt=media&token=${fileToken}`
-          console.log('Upload Successfully, Here is Avatar URL: ', avatarURL)
-          resolve(avatarURL)
-        })
-  
-        blobStream.end(req.file.buffer)
-      })
+        req.feathers.file = req.file
+        req.feathers.fileToken = fileToken
+        req.feathers.bucketName = bucketName
+        req.feathers.fileName = fileName
+        req.feathers.blob = blob
+      }
 
-      req.feathers.avatarURL = URL
       next()
     },
     new Users(options, app)

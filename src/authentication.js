@@ -172,8 +172,9 @@ class GoogleStrategy extends OAuthStrategy {
     // this will grab the picture and email address of the Google profile
     return {
       ...baseData,
-      name: profile.name,
-      email: profile.email
+      username: profile.name,
+      email: profile.email,
+      user_avatar: profile.picture
     }
   }
 

@@ -49,45 +49,51 @@ module.exports = function (app) {
 
   // Issue new token when access token expired
   app.post('/refresh_tokens', async (req, res) => {
-    const { accessToken } = req.body
-    const { refreshToken } = req.session.authentication
+    try {
+      const { accessToken } = req.body
+      const { refreshToken } = req.session.authentication
 
-    const payloadAccessToken = await app
-      .service('authentication')
-      .verifyAccessToken(accessToken, { ignoreExpiration: true })
-
-    const payloadRefreshToken = await app
-      .service('authentication')
-      .verifyAccessToken(refreshToken, { ignoreExpiration: true })
-
-    // Destroy Session when Refresh Token expired
-    if (Date.now() >= payloadRefreshToken.exp * 1000) {
-      req.session.destroy(err => {
-        if (err) {
-          console.log('Không thể hủy Session')
-          throw new err()
-        }
-      })
-
-      res.clearCookie('user')
-
-      return res.status(401).json({
-        message: 'Refresh Token hết thời hạn',
-        iat: payloadRefreshToken.iat,
-        exp: payloadRefreshToken.exp
-      })
-    }
-
-    // Issue Access Token if Refresh Token still alive
-    if (Date.now() >= payloadAccessToken.exp * 1000 && refreshToken) {
-      const newAccessToken = await app
+      const payloadAccessToken = await app
         .service('authentication')
-        .createAccessToken({
-          sub: payloadAccessToken.sub
+        .verifyAccessToken(accessToken, { ignoreExpiration: true })
+
+      const payloadRefreshToken = await app
+        .service('authentication')
+        .verifyAccessToken(refreshToken, { ignoreExpiration: true })
+
+      // Destroy Session when Refresh Token expired
+      if (Date.now() >= payloadRefreshToken.exp * 1000) {
+        req.session.destroy(err => {
+          if (err) {
+            console.log('Không thể hủy Session')
+            throw new err()
+          }
         })
 
-      return res.json({
-        accessToken: newAccessToken
+        res.clearCookie('user')
+
+        return res.status(401).json({
+          message: 'Refresh Token hết thời hạn',
+          iat: payloadRefreshToken.iat,
+          exp: payloadRefreshToken.exp
+        })
+      }
+
+      // Issue Access Token if Refresh Token still alive
+      if (Date.now() >= payloadAccessToken.exp * 1000 && refreshToken) {
+        const newAccessToken = await app
+          .service('authentication')
+          .createAccessToken({
+            sub: payloadAccessToken.sub
+          })
+
+        return res.json({
+          accessToken: newAccessToken
+        })
+      }
+    } catch (error) {
+      return res.status(401).json({
+        message: 'Không thể tạo token mới !!!'
       })
     }
   })
