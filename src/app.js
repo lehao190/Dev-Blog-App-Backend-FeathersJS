@@ -43,8 +43,17 @@ app.use(
   })
 )
 
+// Configure Cors Options
+const allowedDomains = ['http://localhost:8080', 'http://172.28.96.1:8080']
+
 const corsOptions = {
-  origin: 'http://localhost:8080',
+  origin: function (origin, callback) {
+    if (!origin || allowedDomains.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true
 }
 
@@ -58,7 +67,17 @@ app.use('/', express.static(app.get('public')))
 
 // Set up Plugins and providers
 app.configure(express.rest())
-app.configure(socketio())
+app.configure(socketio(function(io) {
+  io.on('connection', function(socket) {
+    socket.emit('news', { text: 'A client connected!', name: 'Hello world' })
+
+    socket.on('aha', function (data) {
+      console.log(data)
+
+      socket.broadcast.emit('aha2', data)
+    })
+  })
+}))
 
 app.configure(knex)
 

@@ -4,6 +4,8 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async context => {
-    return context;
+    console.log('hello dude, Hallelujah !!!')
+    context.service.emit('hello', { hello: 'Hello world, this is Custom Event Dude !!!' })
+    return context
   };
 };

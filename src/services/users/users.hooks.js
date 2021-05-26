@@ -5,7 +5,8 @@ const {
   protect
 } = require('@feathersjs/authentication-local').hooks
 
-const createUserAvatar = require('../../hooks/create-user-avatar');
+const createUserAvatar = require('../../hooks/create-user-avatar')
+const authResult = require('../../hooks/auth-result')
 
 module.exports = {
   before: {
@@ -24,7 +25,7 @@ module.exports = {
       // Always must be the last hook
       protect('password')
     ],
-    find: [],
+    find: [authResult()],
     get: [],
     create: [],
     update: [],

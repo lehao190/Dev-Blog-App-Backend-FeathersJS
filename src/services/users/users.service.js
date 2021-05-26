@@ -11,7 +11,8 @@ const { format } = require('util')
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate')
+    paginate: app.get('paginate'),
+    events: ['hello']
   }
 
   const multer = Multer({
