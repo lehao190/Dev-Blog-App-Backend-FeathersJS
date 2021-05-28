@@ -10,10 +10,14 @@ module.exports = (options = {}) => {
 
     const { params } = context
 
+    context.service.emit('hello', { hello: 'Hello world, this is Custom Event Dude !!!' })
+
+    // console.log('connection: ', params.connection)
+
     // Check if GET method from Authenticated User 
-    if (params.provider === 'rest' && params.headers.authorization) {
-      console.log('Im getting User with REST !!!')
-    }
+    // if (params.provider === 'rest' && params.headers.authorization) {
+    //   console.log('Im getting User with REST !!!')
+    // }
 
     // Only for Internal call when login
     // if (params.provider === 'rest' && !params.headers.authorization && !params.authStrategies) {

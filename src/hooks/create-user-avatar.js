@@ -6,7 +6,7 @@ module.exports = (options = {}) => {
   return async context => {
     const { data, app, params } = context
     // update user's avatar Local Strategy
-    if (!params.authStrategies || params.authStrategies.length < 1) {
+    if (params.file && !params.authStrategies) {
       const { blob, file, bucketName, fileName, fileToken } = params
 
       const URL = await new Promise((resolve, reject) => {

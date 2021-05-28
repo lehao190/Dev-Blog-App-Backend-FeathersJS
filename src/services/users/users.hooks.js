@@ -7,6 +7,7 @@ const {
 
 const createUserAvatar = require('../../hooks/create-user-avatar')
 const authResult = require('../../hooks/auth-result')
+const checkProdiver = require('../../hooks/check-provider')
 
 module.exports = {
   before: {
@@ -25,9 +26,9 @@ module.exports = {
       // Always must be the last hook
       protect('password')
     ],
-    find: [authResult()],
+    find: [],
     get: [],
-    create: [],
+    create: [authResult()],
     update: [],
     patch: [],
     remove: []
