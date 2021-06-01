@@ -1,13 +1,13 @@
 // Firebase Configuration
-const admin = require('firebase-admin')
-const serviceAccount = require('../serviceAccountKey.json')
+// const admin = require('firebase-admin')
+// const serviceAccount = require('../serviceAccountKey.json')
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'dev-blogger-app.appspot.com'
-})
-const firebaseBucket = admin.storage().bucket()
-exports.firebaseBucket = firebaseBucket
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   storageBucket: 'dev-blogger-app.appspot.com'
+// })
+// const firebaseBucket = admin.storage().bucket()
+// exports.firebaseBucket = firebaseBucket
 
 /*  FireBase Config  */
 

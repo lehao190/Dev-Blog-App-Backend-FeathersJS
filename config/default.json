@@ -69,5 +69,13 @@
     "seeds": {
       "directory": "../src/seeds"
     }
+  },
+  "postgres": {
+    "client": "pg",
+    "connection": {
+      "database": "dev_blog",
+      "user":     "postgres",
+      "password": "leoncanady"
+    }
   }
 }

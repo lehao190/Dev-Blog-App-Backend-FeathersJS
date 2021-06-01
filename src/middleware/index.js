@@ -1,13 +1,13 @@
 const { NotAuthenticated } = require('@feathersjs/errors')
 
 const session = require('express-session')
-const redis = require('redis')
 
-const RedisStore = require('connect-redis')(session)
-const redisClient = redis.createClient()
+// const redis = require('redis')
+// const RedisStore = require('connect-redis')(session)
+// const redisClient = redis.createClient()
 
 const sessionOpts = session({
-  store: new RedisStore({ client: redisClient }),
+  // store: new RedisStore({ client: redisClient }),
   secret: 'session-secret',
   name: 'user',
   saveUninitialized: false,
