@@ -4,7 +4,7 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async context => {
-    const { data, app, params } = context
+    const { data, params } = context
     // update user's avatar Local Strategy
     if (params.file && !params.authStrategies) {
       const { blob, file, bucketName, fileName, fileToken } = params

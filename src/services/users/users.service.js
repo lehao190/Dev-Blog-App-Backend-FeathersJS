@@ -4,15 +4,12 @@ const createModel = require('../../models/users.model')
 const hooks = require('./users.hooks')
 const Multer = require('multer')
 const { firebaseBucket } = require('../../app.js')
-const path = require('path')
 const { v4: uuidv4 } = require('uuid')
-const { format } = require('util')
 
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate'),
-    events: ['hello']
+    paginate: app.get('paginate')
   }
 
   const multer = Multer({

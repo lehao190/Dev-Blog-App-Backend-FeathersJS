@@ -35,7 +35,7 @@ module.exports.validateRegister = (
   }
 
   if (email.trim() === '') {
-    errors.username = 'Email còn trống !'
+    errors.email = 'Email còn trống !'
   } else {
     const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/
 
@@ -52,6 +52,6 @@ module.exports.validateRegister = (
 
   return {
     errors,
-    valid: Object.keys(errors).length < 1
+    isValid: Object.keys(errors).length < 1
   }
 }

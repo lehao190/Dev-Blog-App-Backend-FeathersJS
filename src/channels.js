@@ -7,10 +7,6 @@ module.exports = function (app) {
   app.on('connection', async connection => {
     // On a new real-time connection, add it to the anonymous channel
     app.channel('anonymous').join(connection)
-    app.channel('hallelujah').join(connection)
-    app.channel('sons_of_sparda')
-    app.channel('greeks')
-    app.channel('rooms/vergil')
   })
 
   // app.on('disconnect', connection => console.log('Disconnected from Server'))

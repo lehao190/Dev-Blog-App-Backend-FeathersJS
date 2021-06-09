@@ -1,20 +1,18 @@
 const { authenticate } = require('@feathersjs/authentication').hooks
-
 const {
   hashPassword,
   protect
 } = require('@feathersjs/authentication-local').hooks
 
 const createUserAvatar = require('../../hooks/create-user-avatar')
-const authResult = require('../../hooks/auth-result')
-const checkProdiver = require('../../hooks/check-provider')
+const validateRegister = require('../../hooks/validate-register')
 
 module.exports = {
   before: {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword('password'), createUserAvatar()],
+    create: [validateRegister(), hashPassword('password'), createUserAvatar()],
     update: [hashPassword('password'), authenticate('jwt')],
     patch: [hashPassword('password'), authenticate('jwt')],
     remove: [authenticate('jwt')]
@@ -28,7 +26,7 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [authResult()],
+    create: [],
     update: [],
     patch: [],
     remove: []
