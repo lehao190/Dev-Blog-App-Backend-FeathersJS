@@ -49,7 +49,7 @@ module.exports = function (app) {
 
   // Issue new token when access token expired
   app.post('/refresh_tokens', async (req, res) => {
-    try {
+    if (req.session.authentication) {
       const { accessToken } = req.body
       const { refreshToken } = req.session.authentication
 
@@ -91,10 +91,35 @@ module.exports = function (app) {
           accessToken: newAccessToken
         })
       }
-    } catch (error) {
-      return res.status(401).json({
-        message: 'Không thể tạo token mới !!!'
+
+      return res.status(200).json({
+        message: 'Token vẫn còn hiệu lực !!!'
       })
     }
+    
+    return res.status(401).json({
+      message: 'Không thể tạo token mới !!!'
+    })
+  })
+
+  app.post('/logout', async (req, res) => {
+    if (req.session) {
+      req.session.destroy(err => {
+        if (err) {
+          console.log('Không thể hủy Session')
+          throw new err()
+        }
+      })
+
+      res.clearCookie('user')
+
+      return res.status(401).json({
+        message: 'Đăng xuất thành công !!!'
+      })
+    }
+
+    return res.status(500).json({
+      message: 'Không thể đăng xuất !!!'
+    })
   })
 }
