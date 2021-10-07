@@ -28,7 +28,7 @@
       "audience": "https://yourdomain.com",
       "issuer": "feathers",
       "algorithm": "HS256",
-      "expiresIn": "1m"
+      "expiresIn": "30m"
     },
     "local": {
       "usernameField": "email",
@@ -36,7 +36,7 @@
       "errorMessage": "Tài khoản hoặc mật khẩu không tồn tại !"
     },
     "refresh": {
-      "refreshExpiresIn": "2m"
+      "refreshExpiresIn": "60m"
     },
     "oauth": {
       "redirect": "http://localhost:8080",
@@ -68,6 +68,14 @@
     },
     "seeds": {
       "directory": "../src/seeds"
+    }
+  },
+  "postgres": {
+    "client": "pg",
+    "connection": {
+      "database": "dev_blog",
+      "port": "5432",
+      "user": "postgres"
     }
   }
 }

@@ -46,7 +46,7 @@ module.exports = function (app) {
 
     return res.status(200).json(authentication.user)
   })
-
+  
   // Issue new token when access token expired
   app.post('/refresh_tokens', async (req, res) => {
     if (req.session.authentication) {
@@ -103,7 +103,7 @@ module.exports = function (app) {
   })
 
   app.post('/logout', async (req, res) => {
-    if (req.session) {
+    if (req.session.authentication) {
       req.session.destroy(err => {
         if (err) {
           console.log('Không thể hủy Session')
@@ -113,7 +113,7 @@ module.exports = function (app) {
 
       res.clearCookie('user')
 
-      return res.status(401).json({
+      return res.status(201).json({
         message: 'Đăng xuất thành công !!!'
       })
     }

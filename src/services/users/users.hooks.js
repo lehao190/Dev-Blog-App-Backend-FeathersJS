@@ -7,6 +7,8 @@ const {
 const createUserAvatar = require('../../hooks/create-user-avatar')
 const validateRegister = require('../../hooks/validate-register')
 
+// const imageErrorHandler = require('../../hooks/image-error-handler');
+
 module.exports = {
   before: {
     all: [],

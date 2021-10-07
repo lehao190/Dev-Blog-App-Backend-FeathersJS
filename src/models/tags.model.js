@@ -12,7 +12,7 @@ module.exports = function (app) {
       db.schema
         .createTable(tableName, table => {
           table.increments('id').notNullable()
-          table.integer('count')
+          // table.integer('counts')
           table.string('tag_name')
           table.string('tag_icon')
           table.timestamps(false, true)

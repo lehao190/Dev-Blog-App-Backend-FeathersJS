@@ -5,6 +5,7 @@
 module.exports = (options = {}) => {
   return async context => {
     const { data, params } = context
+    
     // update user's avatar Local Strategy
     if (params.file && !params.authStrategies) {
       const { blob, file, bucketName, fileName, fileToken } = params
@@ -27,7 +28,7 @@ module.exports = (options = {}) => {
 
         blobStream.on('finish', () => {
           avatarURL = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${fileName}?alt=media&token=${fileToken}`
-          console.log('Upload Successfully, Here is Avatar URL: ', avatarURL)
+          console.log('Upload Successfully, Here is Image URL: ', avatarURL)
           resolve(avatarURL)
         })
 

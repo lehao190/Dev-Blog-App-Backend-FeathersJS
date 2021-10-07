@@ -12,7 +12,6 @@ module.exports = function (app) {
       db.schema
         .createTable(tableName, table => {
           table.increments('id').notNullable()
-          table.boolean('saved').defaultTo(false)
           table
             .integer('postId')
             .notNullable()

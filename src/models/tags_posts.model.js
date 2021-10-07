@@ -21,7 +21,7 @@ module.exports = function (app) {
             .onDelete('CASCADE')
             .onUpdate('CASCADE')
           table
-            .integer('tagsId')
+            .integer('tagId')
             .notNullable()
             .unsigned()
             .references('id')
