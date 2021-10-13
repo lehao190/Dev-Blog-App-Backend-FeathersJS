@@ -1,14 +1,16 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 
+const validateTag = require('../../hooks/validate-tag');
+
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [authenticate('jwt'), validateTag()],
+    update: [authenticate('jwt'), validateTag()],
+    patch: [authenticate('jwt'), validateTag()],
+    remove: [authenticate('jwt')]
   },
 
   after: {

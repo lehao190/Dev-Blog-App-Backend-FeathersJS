@@ -55,3 +55,17 @@ module.exports.validateRegister = (
     isValid: Object.keys(errors).length < 1
   }
 }
+
+module.exports.validateTag = (tag_name) => {  
+  const regex = /^#[a-zA-Z]+/
+  const errors = {}
+
+  if (!tag_name.match(regex)) {
+    errors.tag_name = 'Thẻ không đúng định dạng !'
+  }
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length < 1
+  }
+}

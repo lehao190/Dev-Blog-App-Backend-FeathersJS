@@ -1,5 +1,7 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 
+const imageErrorHandler = require('../../hooks/image-error-handler');
+
 module.exports = {
   before: {
     all: [],
@@ -13,7 +15,7 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [imageErrorHandler()],
     get: [],
     create: [],
     update: [],
