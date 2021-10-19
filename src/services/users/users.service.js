@@ -2,7 +2,7 @@
 const { Users } = require("./users.class");
 const createModel = require("../../models/users.model");
 const hooks = require("./users.hooks");
-// const Multer = require("multer");
+
 const multer = require("multer");
 const { firebaseBucket } = require("../../app.js");
 const { v4: uuidv4 } = require("uuid");

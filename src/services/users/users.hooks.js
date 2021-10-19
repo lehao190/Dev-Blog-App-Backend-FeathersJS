@@ -4,7 +4,7 @@ const {
   protect
 } = require('@feathersjs/authentication-local').hooks
 
-const createUserAvatar = require('../../hooks/create-user-avatar')
+const createImageURL = require('../../hooks/create-image-url')
 const validateRegister = require('../../hooks/validate-register')
 
 // const imageErrorHandler = require('../../hooks/image-error-handler');
@@ -14,7 +14,7 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [validateRegister(), hashPassword('password'), createUserAvatar()],
+    create: [validateRegister(), hashPassword('password'), createImageURL()],
     update: [hashPassword('password'), authenticate('jwt')],
     patch: [hashPassword('password'), authenticate('jwt')],
     remove: [authenticate('jwt')]
