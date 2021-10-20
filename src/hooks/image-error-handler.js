@@ -34,6 +34,7 @@ module.exports = (options = {}) => {
 
       result.data[i].user_profile = user
       delete result.data[i].user_profile.password
+      delete result.data[i].body
     }
 
     return context;
