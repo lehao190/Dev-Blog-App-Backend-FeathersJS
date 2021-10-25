@@ -1,7 +1,9 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 
-const imageErrorHandler = require('../../hooks/image-error-handler');
+const mutatePostsData = require('../../hooks/mutate-posts-data');
 const createImageURL = require('../../hooks/create-image-url')
+
+const mutateSinglePostData = require('../../hooks/mutate-single-post-data');
 
 module.exports = {
   before: {
@@ -16,8 +18,8 @@ module.exports = {
 
   after: {
     all: [],
-    find: [imageErrorHandler()],
-    get: [],
+    find: [mutatePostsData()],
+    get: [mutateSinglePostData()],
     create: [],
     update: [],
     patch: [],
