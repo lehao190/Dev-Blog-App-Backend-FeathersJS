@@ -68,15 +68,13 @@ app.use('/', express.static(app.get('public')))
 // Set up Plugins and providers
 app.configure(express.rest())
 app.configure(socketio(function(io) {
-  io.on('connection', function(socket) {
-    socket.emit('news', { text: 'A client connected!', name: 'Hello world' })
+  // io.on('connection', function(socket) {
+  //   socket.emit('news', { text: 'A client connected!', name: 'Hello world' })
 
-    socket.on('aha', function (data) {
-      console.log(data)
-
-      socket.broadcast.emit('aha2', data)
-    })
-  })
+  //   socket.on('disconnect', () => {
+  //     console.log('User disconnected to server!')
+  //   })
+  // })
 }))
 
 app.configure(knex)
