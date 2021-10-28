@@ -8,7 +8,7 @@ module.exports = (options = {}) => {
 
     const { count_likes } = await app.service("posts").get(result.postId);
 
-    const post = await app.service("posts").patch(result.postId, {
+    await app.service("posts").patch(result.postId, {
       count_likes: count_likes + 1
     });
 
