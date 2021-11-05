@@ -6,7 +6,7 @@ const mutateResultTagsUsersTable = require('../../hooks/mutate-result-tags-users
 
 module.exports = {
   before: {
-    all: [],
+    all: [authenticate('jwt')],
     find: [customQueryTagsUsers()],
     get: [],
     create: [],

@@ -4,13 +4,18 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (options = {}) => {
   return async (context) => {
+    const noTagsJoin = context.params.query.noTagsJoin
     const userId = context.params.query.userId;
 
-    delete context.params.query;
+    if (userId && !noTagsJoin) {
+      delete context.params.query
+    } else if (userId && noTagsJoin) {
+      delete context.params.query.noTagsJoin
+    }
 
     const query = context.service.createQuery(context.params);
 
-    if (userId) {
+    if (userId && !noTagsJoin) {
       query
         .distinctOn("tags_posts.postId", "tags_users.userId")
         .select(
