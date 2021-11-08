@@ -34,6 +34,20 @@ module.exports = function (app) {
     next()
   })
 
+  app.get('/getUser', async (req, res) => {
+    const user = await app.service('users').get(req.query.id)
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'Người dùng không tồn tại!!!'
+      })
+    }
+
+    delete user.password
+
+    res.status(200).json(user)
+  })
+
   // Get user on Refresh
   app.get('/me', async (req, res) => {
     const { authentication } = req.session
@@ -52,7 +66,7 @@ module.exports = function (app) {
     if (req.session.authentication) {
       const { accessToken } = req.body
       const { refreshToken } = req.session.authentication
-
+      
       const payloadAccessToken = await app
         .service('authentication')
         .verifyAccessToken(accessToken, { ignoreExpiration: true })
