@@ -7,6 +7,8 @@ const {
 const createImageURL = require('../../hooks/create-image-url')
 const validateRegister = require('../../hooks/validate-register')
 
+const deleteOneImage = require('../../hooks/delete-one-image');
+
 // const imageErrorHandler = require('../../hooks/image-error-handler');
 
 module.exports = {
@@ -16,7 +18,12 @@ module.exports = {
     get: [authenticate('jwt')],
     create: [validateRegister(), hashPassword('password'), createImageURL()],
     update: [hashPassword('password'), authenticate('jwt')],
-    patch: [hashPassword('password'), authenticate('jwt')],
+    patch: [
+      hashPassword('password'),
+      authenticate('jwt'),
+      deleteOneImage(),
+      createImageURL()
+    ],
     remove: [authenticate('jwt')]
   },
 
