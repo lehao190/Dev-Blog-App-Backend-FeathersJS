@@ -6,11 +6,11 @@ module.exports = (options = {}) => {
   return async context => {
     const { result } = context;
 
-    // console.log('result: ', result)
+    console.log('result: ', result)
 
-    // if (!result.length) {
-    //   console.log('no length: ', result)
-    // }
+    if (!result.length) {
+      console.log('no length: ', result)
+    }
 
     return context;
   };
