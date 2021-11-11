@@ -9,15 +9,19 @@ module.exports = (options = {}) => {
     const { data, params } = context;
     
     if (data.editAvatar) {
-      if (data.editAvatar !== 'undefined' && params.file) {
+      if (data.editAvatar !== 'undefined' && params.file && data.firebaseImage === 'true') {
         firebaseBucket.file(data.editAvatar).delete()
           .then(() => {
             console.log('Delete previous image Successfully')
           })
           .catch(() => {
-            throw Error('Error while deleting image')
+            throw Error('Xảy ra lỗi khi xóa ảnh cũ')
           })
-      } else if (data.editAvatar !== 'undefined' && !params.file) {
+      }
+      else if (data.editAvatar !== 'undefined' && params.file && data.firebaseImage === 'false') {
+        throw Error('Không thể thay đổi ảnh tài khoản Github hoặc Google')
+      }
+      else if (data.editAvatar !== 'undefined' && !params.file) {
         delete data.user_avatar
       }
 

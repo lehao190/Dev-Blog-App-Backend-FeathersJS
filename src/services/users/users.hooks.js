@@ -9,6 +9,8 @@ const validateRegister = require('../../hooks/validate-register')
 
 const deleteOneImage = require('../../hooks/delete-one-image');
 
+const deleteMultiImages = require('../../hooks/delete-multi-images');
+
 // const imageErrorHandler = require('../../hooks/image-error-handler');
 
 module.exports = {
@@ -38,7 +40,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [deleteMultiImages()]
   },
 
   error: {
