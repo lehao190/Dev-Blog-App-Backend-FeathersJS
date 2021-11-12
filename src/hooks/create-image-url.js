@@ -42,6 +42,12 @@ module.exports = (options = {}) => {
       }
     }
 
+    if (!params.file && data.post_image === 'null') {
+      delete data.post_image
+    } else if (!params.file && data.user_avatar === 'null') {
+      delete data.user_avatar
+    }
+
     return context;
   };
 };

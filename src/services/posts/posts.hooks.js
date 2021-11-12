@@ -4,6 +4,7 @@ const mutatePostsData = require('../../hooks/mutate-posts-data');
 const createImageURL = require('../../hooks/create-image-url')
 
 const mutateSinglePostData = require('../../hooks/mutate-single-post-data');
+const deleteMultiPostsImages = require('../../hooks/delete-multi-posts-images');
 
 module.exports = {
   before: {
@@ -23,7 +24,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [deleteMultiPostsImages()]
   },
 
   error: {
