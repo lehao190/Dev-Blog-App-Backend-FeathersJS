@@ -21,7 +21,7 @@ module.exports = function (app) {
       const upload = multer({
         storage: multer.memoryStorage(),
         limits: {
-          fileSize: 1 * 1024 * 1024,
+          fileSize: 1 * 1024 * 1024
         },
       }).single("post_image");
 
@@ -29,7 +29,7 @@ module.exports = function (app) {
         if (err instanceof multer.MulterError) {
           // A Multer error occurred when uploading.
           return res.status(400).json({
-            message: "File có dung lượng lớn!",
+            fileError: "File có dung lượng vượt quá 1 MB",
           });
         } else if (err) {
           // An unknown error occurred when uploading.

@@ -6,12 +6,14 @@ const createImageURL = require('../../hooks/create-image-url')
 const mutateSinglePostData = require('../../hooks/mutate-single-post-data');
 const deleteMultiPostsImages = require('../../hooks/delete-multi-posts-images');
 
+const validatePostInputs = require('../../hooks/validate-post-inputs');
+
 module.exports = {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [authenticate('jwt'), createImageURL()],
+    create: [authenticate('jwt'), validatePostInputs(), createImageURL()],
     update: [authenticate('jwt')],
     patch: [authenticate('jwt')],
     remove: [authenticate('jwt')]

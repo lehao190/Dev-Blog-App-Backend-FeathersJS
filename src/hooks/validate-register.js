@@ -17,6 +17,24 @@ module.exports = (options = {}) => {
       })
     }
 
+    const user = await context.app.service("users").find({
+      query: {
+        email
+      }
+    });
+
+    if (user.data.length) {
+      throw new BadRequest('Giá trị nhập vào không đúng', {
+        errors: {
+          user: 'Người dùng đã tồn tại'
+        }
+      })
+    }
+
+    if (username === 'admin') {
+      context.data.admin = true
+    }
+
     delete context.data.rePassword
 
     return context
