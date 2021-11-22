@@ -44,7 +44,7 @@ app.use(
 )
 
 // Configure Cors Options
-const allowedDomains = ['http://localhost:8080', 'http://172.28.96.1:8080']
+const allowedDomains = ['http://localhost:8080']
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -58,6 +58,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+// app.use(cors())
 app.use(compress())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -67,15 +68,7 @@ app.use('/', express.static(app.get('public')))
 
 // Set up Plugins and providers
 app.configure(express.rest())
-app.configure(socketio(function(io) {
-  // io.on('connection', function(socket) {
-  //   socket.emit('news', { text: 'A client connected!', name: 'Hello world' })
-
-  //   socket.on('disconnect', () => {
-  //     console.log('User disconnected to server!')
-  //   })
-  // })
-}))
+app.configure(socketio())
 
 app.configure(knex)
 

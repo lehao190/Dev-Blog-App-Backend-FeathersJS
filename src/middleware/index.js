@@ -4,7 +4,10 @@ const session = require('express-session')
 const redis = require('redis')
 
 const RedisStore = require('connect-redis')(session)
-const redisClient = redis.createClient()
+const redisClient = redis.createClient({
+  // host: '127.0.0.1'
+  // port: 6379
+})
 
 const sessionOpts = session({
   store: new RedisStore({ client: redisClient }),
@@ -16,7 +19,7 @@ const sessionOpts = session({
     sameSite: false,
     httpOnly: true,
     secure: false,
-    maxAge: 1 * 60 * 60 * 1000
+    maxAge: 520 * 60 * 60 * 1000
   }
 })
 

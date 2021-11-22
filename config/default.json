@@ -28,7 +28,7 @@
       "audience": "https://yourdomain.com",
       "issuer": "feathers",
       "algorithm": "HS256",
-      "expiresIn": "1m"
+      "expiresIn": "7d"
     },
     "local": {
       "usernameField": "email",
@@ -36,7 +36,7 @@
       "errorMessage": "Tài khoản hoặc mật khẩu không tồn tại !"
     },
     "refresh": {
-      "refreshExpiresIn": "2m"
+      "refreshExpiresIn": "21d"
     },
     "oauth": {
       "redirect": "http://localhost:8080",

@@ -5,8 +5,6 @@ const likes = require('./likes/likes.service.js');
 const tags = require('./tags/tags.service.js');
 const tagsUsers = require('./tags_users/tags_users.service.js');
 const tagsPosts = require('./tags_posts/tags_posts.service.js');
-const savedPosts = require('./saved_posts/saved_posts.service.js');
-const follwers = require('./follwers/follwers.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(users);
@@ -16,6 +14,4 @@ module.exports = function (app) {
   app.configure(tags);
   app.configure(tagsUsers);
   app.configure(tagsPosts);
-  app.configure(savedPosts);
-  app.configure(follwers);
 };
