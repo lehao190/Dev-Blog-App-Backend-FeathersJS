@@ -25,7 +25,7 @@ Getting up and running is as easy as 1, 2, 3.
     cd path/to/dev-blog-backend-feathers-js
     npm install
     ```
-3. Change default.example.json and production.example.json files to default.json and production.json, then make approriate config changes to those files 
+3. Change default.example.json, production.example.json, serviceAccountKey.example.json files to default.json, production.json, serviceAccountKey.json then make approriate config changes to those files. Make sure to have serviceAccountKey.json credentials from Firebase project.
 4. Start your app
 
     ```
