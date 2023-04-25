@@ -111,3 +111,5 @@ lib/
 data/
 serviceAccountKey.json
 firebaseConfig.js
+config/default.json
+config/production.json

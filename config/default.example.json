@@ -1,0 +1,81 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 200,
+    "max": 300
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "",
+    "authStrategies": [
+      "jwt",
+      "local",
+      "anonymous",
+      "apiKey"
+    ],
+    "apiKey": {
+      "allowedKeys": [ "Dante", "Vergil" ],
+      "header": "Randon-Access-Token-Yeah",
+      "urlParam": "tokenFromMe"
+    },
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "7d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password",
+      "errorMessage": "Tài khoản hoặc mật khẩu không tồn tại !"
+    },
+    "refresh": {
+      "refreshExpiresIn": "21d"
+    },
+    "oauth": {
+      "redirect": "http://localhost:8080",
+      "google": {
+        "key": "",
+        "secret": "",
+        "redirect_uri": "",
+        "callback": "",
+        "scope": [
+          "email",
+          "profile",
+          "openid"
+        ]
+      },
+      "github": {
+        "key": "",
+        "secret": "",
+        "redirect_uri": "",
+        "callback": ""
+      }
+    }
+  },
+  "mysql": {
+    "client": "mysql2",
+    "connection": "mysql://root:@localhost:3306/dev_blog",
+    "migrations": {
+      "directory": "../src/migrations",
+      "tableName": "knex_migrations"
+    },
+    "seeds": {
+      "directory": "../src/seeds"
+    }
+  },
+  "postgres": {
+    "client": "pg",
+    "connection": {
+      "database": "dev_blog",
+      "port": "5432",
+      "user": "postgres"
+    }
+  }
+}
