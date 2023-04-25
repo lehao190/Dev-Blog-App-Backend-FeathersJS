@@ -25,8 +25,8 @@ Getting up and running is as easy as 1, 2, 3.
     cd path/to/dev-blog-backend-feathers-js
     npm install
     ```
-
-3. Start your app
+3. Change default.example.json and production.example.json files to default.json and production.json, then make approriate config changes to those files 
+4. Start your app
 
     ```
     npm start
