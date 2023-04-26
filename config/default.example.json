@@ -1,6 +1,7 @@
 {
   "host": "localhost",
   "port": 3030,
+  "clientHost": "http://localhost:4000",
   "public": "../public/",
   "paginate": {
     "default": 200,

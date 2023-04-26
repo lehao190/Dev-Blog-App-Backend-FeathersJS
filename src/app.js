@@ -44,7 +44,7 @@ app.use(
 )
 
 // Configure Cors Options
-const allowedDomains = ['http://localhost:8080']
+const allowedDomains = ['http://localhost:8080', app.get('clientHost')]
 
 const corsOptions = {
   origin: function (origin, callback) {
